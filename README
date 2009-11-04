@@ -40,10 +40,10 @@ Examples
     >>> from ghettoq.backends import Connection
     >>> import simplejson
 
-    >>> conn = Connection("redis", host="localhost", db="myqueue")
+    >>> conn = Connection("redis", host="localhost", database="myqueue")
 
     >>> # Publishing messages
-    >>> q = Queue(name="tasks", conn)
+    >>> q = Queue("tasks", conn)
     >>> payload = {"name": "George Constanza"}
     >>> q.put(simplejson.dumps(payload))
 
@@ -55,3 +55,19 @@ Examples
     # Empty raises ghettoq.messaging.Empty
     >>> q.get()
     Empty
+
+
+Using Django database support
+-----------------------------
+
+If settings is already configured you don't have to specify any
+connection options.
+
+    >>> from ghettoq.backends import Connection
+    >>> from ghettoq.messaging import Queue
+
+    >>> conn = Connection("database")
+    >>> queue = Queue(name="tasks", backend=conn)
+    >>> queue.put("To whom it may concern")
+    >>> queue.get()
+    "To whom it may concern"
