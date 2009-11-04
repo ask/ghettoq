@@ -1,3 +1,4 @@
+from ghettoq.messaging import Queue as QueueType
 
 
 class BaseBackend(object):
@@ -11,6 +12,9 @@ class BaseBackend(object):
         self.database = database
         self.timeout = timeout
         self.connection = None
+
+    def Queue(self, name):
+        return QueueType(backend=self, name=name)
 
     @property
     def client(self):

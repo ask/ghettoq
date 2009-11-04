@@ -1,5 +1,4 @@
-from ghettoq.messaging import Queue, Empty
-from ghettoq.backends import Connection
+from ghettoq.simple import Connection, Empty
 from anyjson import serialize, deserialize
 import unittest
 
@@ -7,8 +6,8 @@ import unittest
 class TestDatabaseBackend(unittest.TestCase):
 
     def test_basic(self):
-        b = Connection("database")
-        q = Queue("testing", backend=b)
+        conn = Connection("database")
+        q = conn.Queue("testing")
 
         self.assertRaises(Empty, q.get)
         q.put(serialize({"name": "George Constanza"}))

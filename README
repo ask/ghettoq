@@ -37,13 +37,13 @@ by doing the following,::
 Examples
 ========
 
-    >>> from ghettoq.backends import Connection
+    >>> from ghettoq.simple import Connection
     >>> import simplejson
 
     >>> conn = Connection("redis", host="localhost", database="myqueue")
 
     >>> # Publishing messages
-    >>> q = Queue("tasks", conn)
+    >>> q = conn.Queue("tasks")
     >>> payload = {"name": "George Constanza"}
     >>> q.put(simplejson.dumps(payload))
 
@@ -63,11 +63,10 @@ Using Django database support
 If settings is already configured you don't have to specify any
 connection options.
 
-    >>> from ghettoq.backends import Connection
-    >>> from ghettoq.messaging import Queue
+    >>> from ghettoq.simple import Connection
 
     >>> conn = Connection("database")
-    >>> queue = Queue(name="tasks", backend=conn)
+    >>> queue = conn.Queue(name="tasks")
     >>> queue.put("To whom it may concern")
     >>> queue.get()
     "To whom it may concern"
