@@ -7,7 +7,10 @@ ghettoq - Redis based ghetto queue
 Introduction
 ============
 
-.. Please write an introduction to your package here.
+ghettoq is a Redis based ghetto queue, used to implement Redis support for
+`carrot`_
+
+.. _`carrot`: http://pypi.python.org/pypi/carrot
 
 Installation
 ============
@@ -34,4 +37,23 @@ by doing the following,::
 Examples
 ========
 
-.. Please write some examples using your package here.
+    >>> from ghettoq.messaging import Queue
+    >>> import simplejson
+
+    >>> # Publishing messages
+    >>> q = Queue(name="tasks")
+    >>> payload = {"name": "George Constanza"}
+    >>> q.put(simplejson.dumps(payload), content_type="application/json",
+              content_encoding="utf-8")
+
+    >>> # Consuming messages
+    >>> message = q.get()
+    >>> message
+    Message(content_encoding="application/json", content_encoding="utf-8",
+            delivery_tag="f3f8e1f6-218b-4dde-8460-7a3731e70bb0")
+    >>> message.payload
+    '{"name": "George Constanza"}'
+
+    # Empty yields None
+    >>> q.get()
+    raises Queue.Empty

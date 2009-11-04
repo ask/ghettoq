@@ -78,10 +78,10 @@ setup(
     zip_safe=False,
     test_suite="nose.collector",
     install_requires=[
+        "redis",
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
-        "Framework :: Django",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
         "Intended Audience :: Developers",
