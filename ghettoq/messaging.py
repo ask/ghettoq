@@ -22,9 +22,9 @@ class Queue(object):
 class QueueSet(object):
 
     def __init__(self, backend, queues):
-        self.queues = map(backend.Queue, queues)
         self.backend = backend
-        self.cycle = cycle(queues)
+        self.queues = map(self.backend.Queue, queues)
+        self.cycle = cycle(self.queues)
 
     def get(self):
         while True:
