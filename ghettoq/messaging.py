@@ -23,12 +23,19 @@ class QueueSet(object):
 
     def __init__(self, backend, queues):
         self.backend = backend
-        self.queues = map(self.backend.Queue, queues)
+        self.queue_names = queues
+        self.queues = map(self.backend.Queue, self.queue_names)
         self.cycle = cycle(self.queues)
+        self.all = frozenset(self.queue_names)
 
     def get(self):
+        tried = set()
+
         while True:
+            queue = self.cycle.next()
             try:
-                return self.cycle.next().get()
+                return queue.get()
             except QueueEmpty:
-                pass
+                tried.add(queue)
+                if tried == self.all:
+                    raise
