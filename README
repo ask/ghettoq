@@ -1,5 +1,5 @@
 ============================================================================
-ghettoq - Redis based ghetto queue
+ghettoq - Ghetto Queue using Redis or Django Models.
 ============================================================================
 
 :Version: 0.0.1
@@ -7,7 +7,8 @@ ghettoq - Redis based ghetto queue
 Introduction
 ============
 
-ghettoq is a Redis based ghetto queue, used to implement Redis support for
+ghettoq is a ghetto queue framework, used to implement Redis and Django
+database support for
 `carrot`_
 
 .. _`carrot`: http://pypi.python.org/pypi/carrot

@@ -1,7 +1,7 @@
-"""Redis based ghetto queue"""
-VERSION = (0, 0, 1)
+"""Ghetto Queue using Redis or Django Models."""
+VERSION = (0, 1, 0)
 __version__ = ".".join(map(str, VERSION))
-__author__ = "Opera Software (WebTeam)"
-__contact__ = "portal-dev@list.opera.com"
-__homepage__ = "http://cgit.portal-dev.oslo.osa/cgit.cgi/ghettoq/"
+__author__ = "Ask Solem"
+__contact__ = "askh@opera.com"
+__homepage__ = "http://github.com/ask/ghettoq/"
 __docformat__ = "restructuredtext"
