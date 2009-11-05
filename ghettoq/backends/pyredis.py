@@ -13,5 +13,3 @@ class RedisBackend(BaseBackend):
 
     def get(self, queue):
         return self.client.pop(queue)
-
-

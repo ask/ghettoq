@@ -17,13 +17,15 @@ class Queue(object):
             return payload
         raise Empty
 
+    def __repr__(self):
+        return "<Queue: %s>" % repr(self.name)
 
 
 class QueueSet(object):
 
     def __init__(self, backend, queues):
         self.backend = backend
-        self.queue_names = queues
+        self.queue_names = list(queues)
         self.queues = map(self.backend.Queue, self.queue_names)
         self.cycle = cycle(self.queues)
         self.all = frozenset(self.queue_names)
@@ -36,8 +38,11 @@ class QueueSet(object):
             try:
                 item = queue.get()
             except Empty:
-                tried.add(queue)
+                tried.add(queue.name)
                 if tried == self.all:
                     raise
             else:
                 return item, queue.name
+
+    def __repr__(self):
+        return "<QueueSet: %s>" % repr(self.queue_names)

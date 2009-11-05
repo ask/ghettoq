@@ -32,13 +32,15 @@ class Message(BaseMessage):
             "The GhettoQ backend does not implement requeue")
 
 
-class Backend(BaseBackend):
+class MultiBackend(BaseBackend):
     Message = Message
     default_port = None
-    type = "Redis"
+    type = None
 
     def __init__(self, connection, **kwargs):
-        self.type = kwargs.get("type", self.type)
+        if not self.type:
+            raise NotImplementedError(
+                        "MultiBackends must have the type attribute")
         self.connection = connection
         self._consumers = {}
         self._callbacks = {}
@@ -136,4 +138,9 @@ class Backend(BaseBackend):
         return self._channel
 
 
+class Redis(MultiBackend):
+    type = "Redis"
 
+
+class Database(MultiBackend):
+    type = "database"
