@@ -21,3 +21,6 @@ class BaseBackend(object):
         if self.connection is None:
             self.connection = self.establish_connection()
         return self.connection
+
+    def close(self):
+        pass
