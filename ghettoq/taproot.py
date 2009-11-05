@@ -14,8 +14,8 @@ class Message(BaseMessage):
         payload = deserialize(payload)
         kwargs["body"] = payload.get("body")
         kwargs["delivery_tag"] = payload.get("delivery_tag")
-        kwargs["content_type"] = payload.get("content_type")
-        kwargs["content_encoding"] = payload.get("content_encoding")
+        kwargs["content_type"] = payload.get("content-type")
+        kwargs["content_encoding"] = payload.get("content-encoding")
         kwargs["priority"] = payload.get("priority")
 
         super(Message, self).__init__(backend, **kwargs)
@@ -42,6 +42,7 @@ class Backend(BaseBackend):
         self.connection = connection
         self._consumers = {}
         self._callbacks = {}
+        self._channel = None
 
     def establish_connection(self):
         conninfo = self.connection
@@ -57,9 +58,9 @@ class Backend(BaseBackend):
     def queue_exists(self, queue):
         return True
 
-
     def queue_purge(self, queue, **kwargs):
         # TODO
+        pass
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
                          **kwargs):
@@ -68,19 +69,21 @@ class Backend(BaseBackend):
         self._callbacks[queue] = callback
 
     def consume(self, limit=None):
-        it = self.channel.get_multi(self._consumers.values())
+        queueset = self.channel.QueueSet(self._consumers.values())
         for total_message_count in count():
             if limit and total_message_count >= limit:
                 raise StopIteration
             while True:
-                payload, queue = it.next()
-                if payload:
+                try:
+                    payload, queue = queueset.get()
+                except QueueEmpty:
+                    pass
+                else:
                     break
 
             if not queue or queue not in self._callbacks:
                 continue
 
-            # Process payload here (content-type etc)
             self._callbacks[queue](payload)
 
             yield True
@@ -100,7 +103,7 @@ class Backend(BaseBackend):
         pass
 
     def message_to_python(self, raw_message):
-        return self.Message(backend=self, frame=raw_message)
+        return self.Message(backend=self, payload=raw_message)
 
     def prepare_message(self, message_data, delivery_mode, priority=0,
             content_type=None, content_encoding=None):

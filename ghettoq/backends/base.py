@@ -1,4 +1,4 @@
-from ghettoq.messaging import Queue as QueueType
+from ghettoq import messaging
 
 
 class BaseBackend(object):
@@ -14,7 +14,10 @@ class BaseBackend(object):
         self.connection = None
 
     def Queue(self, name):
-        return QueueType(backend=self, name=name)
+        return messaging.Queue(self, name)
+
+    def QueueSet(self, names):
+        return messaging.QueueSet(self, names)
 
     @property
     def client(self):

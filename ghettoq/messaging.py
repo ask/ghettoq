@@ -34,8 +34,10 @@ class QueueSet(object):
         while True:
             queue = self.cycle.next()
             try:
-                return queue.get()
-            except QueueEmpty:
+                item = queue.get()
+            except Empty:
                 tried.add(queue)
                 if tried == self.all:
                     raise
+            else:
+                return item, queue.name
