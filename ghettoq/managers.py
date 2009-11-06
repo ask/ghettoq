@@ -17,6 +17,14 @@ class QueueManager(models.Manager):
 
         return queue.messages.pop()
 
+    def purge(self, queue_name):
+        try:
+            queue = self.get(name=queue_name)
+        except self.model.DoesNotExist:
+            return
+
+        queue.messages.all().delete()
+
 
 class MessageManager(models.Manager):
 

@@ -63,12 +63,10 @@ class MultiBackend(BaseBackend):
         return True
 
     def queue_purge(self, queue, **kwargs):
-        # TODO
-        pass
+        self.channel.Queue(queue).purge()
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
                          **kwargs):
-        # FIXME
         self._consumers[consumer_tag] = queue
         self._callbacks[queue] = callback
 
@@ -125,7 +123,8 @@ class MultiBackend(BaseBackend):
     def cancel(self, consumer_tag):
         if not self._channel:
             return
-        self._consumers.pop(consumer_tag, None)
+        queue = self._consumers.pop(consumer_tag, None)
+        self._callbacks.pop(queue, None)
 
     def close(self):
         for consumer_tag in self._consumers.keys():

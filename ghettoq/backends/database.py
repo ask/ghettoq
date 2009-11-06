@@ -23,3 +23,6 @@ class DatabaseBackend(BaseBackend):
 
     def get(self, queue):
         return Queue.objects.fetch(queue)
+
+    def purge(self, queue):
+        return Queue.objects.purge(queue)
