@@ -17,6 +17,9 @@ class Queue(object):
             return payload
         raise Empty
 
+    def purge(self):
+        self.backend.purge(self.name)
+
     def __repr__(self):
         return "<Queue: %s>" % repr(self.name)
 
