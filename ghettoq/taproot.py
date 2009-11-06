@@ -4,7 +4,7 @@ from ghettoq.backends import Connection
 from itertools import count
 from ghettoq.messaging import Empty as QueueEmpty
 from django.utils.datastructures import SortedDict
-from uuid import uuid4
+from carrot.utils import gen_unique_id
 import sys
 import time
 import atexit
@@ -175,7 +175,7 @@ class MultiBackend(BaseBackend):
     def prepare_message(self, message_data, delivery_mode, priority=0,
             content_type=None, content_encoding=None):
         return {"body": message_data,
-                "delivery_tag": str(uuid4()),
+                "delivery_tag": gen_unique_id(),
                 "priority": priority or 0,
                 "content-encoding": content_encoding,
                 "content-type": content_type}
@@ -203,7 +203,8 @@ class MultiBackend(BaseBackend):
     @property
     def channel(self):
         if not self._channel:
-            # Need one connection per channel (use AMQP if that is a problem)
+            # Need one connection per channel.
+            # AMQP has multiplexing, but Redis does not.
             self._channel = self.establish_connection()
         return self._channel
 
