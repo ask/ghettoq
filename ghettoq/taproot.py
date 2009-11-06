@@ -4,6 +4,7 @@ from ghettoq.backends import Connection
 from itertools import count
 from ghettoq.messaging import Empty as QueueEmpty
 from uuid import uuid4
+import time
 
 
 class Message(BaseMessage):
@@ -36,6 +37,7 @@ class MultiBackend(BaseBackend):
     Message = Message
     default_port = None
     type = None
+    interval = 1
 
     def __init__(self, connection, **kwargs):
         if not self.type:
@@ -75,11 +77,13 @@ class MultiBackend(BaseBackend):
         for total_message_count in count():
             if limit and total_message_count >= limit:
                 raise StopIteration
+
+            # Poll
             while True:
                 try:
                     payload, queue = queueset.get()
                 except QueueEmpty:
-                    pass
+                    time.sleep(self.interval)
                 else:
                     break
 
