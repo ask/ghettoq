@@ -121,17 +121,6 @@ class MultiBackend(BaseBackend):
         self._consumers[consumer_tag] = queue
         self._callbacks[queue] = callback
 
-    @property
-    def qos_manager(self):
-        if self._qos_manager is None:
-            self._qos_manager = QualityOfService(self.channel)
-
-        # Update prefetch count / interval
-        self._qos_manager.prefetch_count = self._prefetch_count
-        self._qos_manager.interval = self.interval
-
-        return self._qos_manager
-
     def consume(self, limit=None):
         queueset = self.channel.QueueSet(self._consumers.values())
 
@@ -207,6 +196,17 @@ class MultiBackend(BaseBackend):
             # AMQP has multiplexing, but Redis does not.
             self._channel = self.establish_connection()
         return self._channel
+
+    @property
+    def qos_manager(self):
+        if self._qos_manager is None:
+            self._qos_manager = QualityOfService(self.channel)
+
+        # Update prefetch count / interval
+        self._qos_manager.prefetch_count = self._prefetch_count
+        self._qos_manager.interval = self.interval
+
+        return self._qos_manager
 
 
 class Redis(MultiBackend):

@@ -16,4 +16,3 @@ class RedisBackend(BaseBackend):
 
     def purge(self, queue):
         return self.client.delete(queue)
-

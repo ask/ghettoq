@@ -30,4 +30,3 @@ class TestRedisBackend(unittest.TestCase):
         for queue in a, b, c:
             self.assertRaises(Empty, queue.get)
         self.assertRaises(Empty, queueset.get)
-
