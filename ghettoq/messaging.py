@@ -36,7 +36,7 @@ class QueueSet(object):
         self.queues = map(self.backend.Queue, self.queue_names)
 
         # an infinite cycle through all the queues.
-        self.queue_cycle = cycle(self.queues)
+        self.cycle = cycle(self.queues)
 
         # A set of all the queue names, so we can match when we've
         # tried all of them.
