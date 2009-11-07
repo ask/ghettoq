@@ -64,7 +64,7 @@ class Message(BaseMessage):
         kwargs["content_type"] = payload.get("content-type")
         kwargs["content_encoding"] = payload.get("content-encoding")
         kwargs["priority"] = payload.get("priority")
-        self._destination = payload.get("destination")
+        self.destination = payload.get("destination")
 
         super(Message, self).__init__(backend, **kwargs)
 
@@ -157,7 +157,7 @@ class MultiBackend(BaseBackend):
 
     def message_to_python(self, raw_message):
         message = self.Message(backend=self, payload=raw_message)
-        self.qos_manager.append(message, message._destination,
+        self.qos_manager.append(message, message.destination,
                                 message.delivery_tag)
         return message
 
