@@ -9,7 +9,7 @@ class RedisBackend(BaseBackend):
                      timeout=self.timeout)
 
     def put(self, queue, message):
-        self.client.push(queue, message, tail=True)
+        self.client.push(queue, message, head=False)
 
     def get(self, queue):
         return self.client.pop(queue)
