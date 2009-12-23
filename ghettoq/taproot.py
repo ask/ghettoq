@@ -59,7 +59,7 @@ class Message(BaseMessage):
         self.backend = backend
 
         payload = deserialize(payload)
-        kwargs["body"] = payload.get("body")
+        kwargs["body"] = payload.get("body").encode("utf-8")
         kwargs["delivery_tag"] = payload.get("delivery_tag")
         kwargs["content_type"] = payload.get("content-type")
         kwargs["content_encoding"] = payload.get("content-encoding")
