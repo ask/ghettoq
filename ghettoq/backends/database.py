@@ -22,7 +22,12 @@ class DatabaseBackend(BaseBackend):
         Queue.objects.publish(queue, message)
 
     def get(self, queue):
+        self.refresh_connection()
         return Queue.objects.fetch(queue)
 
     def purge(self, queue):
         return Queue.objects.purge(queue)
+
+    def refresh_connection(self):
+        from django.db import connection
+        connection.close()
