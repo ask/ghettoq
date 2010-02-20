@@ -6,7 +6,7 @@ class RedisBackend(BaseBackend):
 
     def establish_connection(self):
         return Redis(host=self.host, port=self.port, db=self.database,
-                     timeout=self.timeout)
+                     password=self.password)
 
     def put(self, queue, message):
         self.client.push(queue, message, head=False)
