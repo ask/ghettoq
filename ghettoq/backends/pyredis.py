@@ -15,7 +15,7 @@ class RedisBackend(BaseBackend):
         self.client.lpush(queue, message)
 
     def get(self, queue):
-        return self.client.rpop(queue)
+        return self.client.brpop(queue, timeout=1)
 
     def purge(self, queue):
         return self.client.delete(queue)
