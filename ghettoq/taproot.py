@@ -105,7 +105,7 @@ class MultiBackend(BaseBackend):
         return True
 
     def queue_purge(self, queue, **kwargs):
-        self.channel.Queue(queue).purge()
+        return self.channel.Queue(queue).purge()
 
     def _poll(self, resource):
         while True:
