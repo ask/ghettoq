@@ -30,7 +30,7 @@ class MessageManager(models.Manager):
 
     def pop(self):
         try:
-            resultset = self.filter(visible=True).order_by('timestamp', 'id')
+            resultset = self.filter(visible=True).order_by('msg_timestamp', 'id')
             result = resultset[0:1].get()
             result.visible = False
             result.save()
