@@ -81,11 +81,12 @@ connection options. The settings attrs used are:
 * BROKER_HOST: '127.0.0.1' if not set
 * BROKER_PORT: 27017 if not set
 * BROKER_VHOST (Database Name): 'ghettoq' if not set
+* Collection name: "messages"... should be added support for BROKER_COL settings var?
 
     >>> from ghettoq.simple import Connection
 
     >>> conn = Connection("mongodb")
-    >>> queue = conn.Queue(name="tasks") # tasks is the collection name
+    >>> queue = conn.Queue(name="tasks")
     >>> queue.put("To whom it may concern")
     >>> queue.get()
     "To whom it may concern"

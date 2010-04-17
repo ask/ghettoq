@@ -11,24 +11,24 @@ DEFAULT_PORT = 27017
 
 class MongodbBackend(BaseBackend):
 
-    def __init__(self, *args, **kwargs):
-        super(MongodbBackend, self).__init__(*args, **kwargs)
-
+    def establish_connection(self):
         self.port = self.port or DEFAULT_PORT
         self.host = self.host or DEFAULT_HOST
         self.connection = Connection(host=self.host, port=self.port)
         self.database = getattr(self.connection, (self.database == "/" and
-"ghettoq") or self.database)
+"ghettoq") or (not self.database and "ghettoq") or self.database)
+        return getattr(self.database, "messages")
 
     def put(self, queue, message):
-        getattr(self.database, queue).insert({"payload" : message})
+        self.client.insert({"payload" : message, "queue" : queue})
+        self.client.ensure_index([("queue", 1)])
 
     def get(self, queue):
-        msg =  getattr(self.database, queue).find_one()
+        msg =  self.client.find_one({"queue" : queue})
         if not msg:
             raise Empty, "Empty queue"
-        getattr(self.database, queue).remove(msg)
+        self.client.remove(msg)
         return msg["payload"]
 
     def purge(self, queue):
-        return getattr(self.database, queue).remove()
+        return self.client.remove({"queue" : queue})
