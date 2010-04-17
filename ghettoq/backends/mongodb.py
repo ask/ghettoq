@@ -25,9 +25,9 @@ class MongodbBackend(BaseBackend):
 
     def get(self, queue):
         msg =  getattr(self.database, queue).find_one()
-        getattr(self.database, queue).remove(msg)
         if not msg:
             raise Empty, "Empty queue"
+        getattr(self.database, queue).remove(msg)
         return msg["payload"]
 
     def purge(self, queue):
