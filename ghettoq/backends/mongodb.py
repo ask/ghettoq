@@ -1,3 +1,7 @@
+##
+# Author: Flavio [FlaPer87] Percoco Premoli <flaper87@flaper87.org>
+#
+
 from pymongo.connection import Connection
 from ghettoq.backends.base import BaseBackend
 from ghettoq.messaging import Empty
