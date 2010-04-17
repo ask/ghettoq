@@ -17,11 +17,12 @@ class MongodbBackend(BaseBackend):
         self.connection = Connection(host=self.host, port=self.port)
         self.database = getattr(self.connection, (self.database == "/" and
 "ghettoq") or (not self.database and "ghettoq") or self.database)
-        return getattr(self.database, "messages")
+        col = getattr(self.database, "messages")
+        col.ensure_index([("queue", 1)])
+        return col
 
     def put(self, queue, message):
         self.client.insert({"payload" : message, "queue" : queue})
-        self.client.ensure_index([("queue", 1)])
 
     def get(self, queue):
         msg =  self.client.find_one({"queue" : queue})
