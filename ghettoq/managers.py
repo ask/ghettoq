@@ -23,7 +23,10 @@ class QueueManager(models.Manager):
         except self.model.DoesNotExist:
             return
 
-        queue.messages.all().delete()
+        messages = queue.messages.all()
+        count = messages.count()
+        messages.delete()
+        return count
 
 
 class MessageManager(models.Manager):
