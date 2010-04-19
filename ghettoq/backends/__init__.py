@@ -3,6 +3,7 @@ import sys
 BACKEND_ALIASES = {
     "redis": "ghettoq.backends.pyredis.RedisBackend",
     "database": "ghettoq.backends.database.DatabaseBackend",
+    "mongodb": "ghettoq.backends.mongodb.MongodbBackend",
 }
 _backend_cache = {}
 
