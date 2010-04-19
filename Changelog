@@ -1,0 +1,18 @@
+================
+ Change history
+================
+
+0.2.0 [2010-04-19 11:40 A.M CET]
+================================
+
+* **IMPORTANT** database backend: The ``timestamp`` field has been renamed to
+  ``sent_at`` as ``TIMESTAMP`` is a reserved word in Oracle databases.
+
+  This means existing users will need to migrate their existing tables.
+  In MySQL this can be done manually by using ``ALTER``::
+
+  	ALTER TABLE ghettoq_message CHANGE timestamp sent_at DATETIME;
+
+
+
+* Added support for MongoDB.
