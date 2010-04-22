@@ -216,5 +216,6 @@ class Redis(MultiBackend):
 class Database(MultiBackend):
     type = "database"
 
+
 class MongoDB(MultiBackend):
     type = "mongodb"
