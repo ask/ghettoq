@@ -23,14 +23,17 @@ class QueueManager(models.Manager):
         except self.model.DoesNotExist:
             return
 
-        queue.messages.all().delete()
+        messages = queue.messages.all()
+        count = messages.count()
+        messages.delete()
+        return count
 
 
 class MessageManager(models.Manager):
 
     def pop(self):
         try:
-            resultset = self.filter(visible=True).order_by('timestamp', 'id')
+            resultset = self.filter(visible=True).order_by('sent_at', 'id')
             result = resultset[0:1].get()
             result.visible = False
             result.save()
