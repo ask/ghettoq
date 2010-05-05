@@ -18,7 +18,7 @@ class MongodbBackend(BaseBackend):
         dbname = self.database
         if not dbname or dbname == "/":
             dbname = "ghettoq"
-        self.database = getattr(self.connection, database)
+        self.database = getattr(self.connection, dbname)
         col = self.database.messages
         col.ensure_index([("queue", 1)])
         return col
