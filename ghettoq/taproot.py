@@ -92,11 +92,13 @@ class MultiBackend(BaseBackend):
 
     def establish_connection(self):
         conninfo = self.connection
-        return Connection(self.type, host=conninfo.hostname,
+        conn = Connection(self.type, host=conninfo.hostname,
                                      user=conninfo.userid,
                                      password=conninfo.password,
                                      database=conninfo.virtual_host,
                                      port=conninfo.port)
+        conn.drain_events = self.drain_events
+        return conn
 
     def close_connection(self, connection):
         connection.close()
@@ -121,20 +123,21 @@ class MultiBackend(BaseBackend):
         self._consumers[consumer_tag] = queue
         self._callbacks[queue] = callback
 
-    def consume(self, limit=None):
+    def drain_events(self, timeout=None):
         queueset = self.channel.QueueSet(self._consumers.values())
+        payload, queue = self._poll(queueset)
 
+        if not queue or queue not in self._callbacks:
+            continue
+
+        self._callbacks[queue](payload)
+
+    def consume(self, limit=None):
         for total_message_count in count():
-
             if limit and total_message_count >= limit:
                 raise StopIteration
 
-            payload, queue = self._poll(queueset)
-
-            if not queue or queue not in self._callbacks:
-                continue
-
-            self._callbacks[queue](payload)
+            self.drain_events()
 
             yield True
 
