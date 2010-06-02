@@ -41,7 +41,7 @@ Examples
     >>> from ghettoq.simple import Connection
     >>> import simplejson
 
-    >>> conn = Connection("redis", host="localhost", database="myqueue")
+    >>> conn = Connection("redis", host="localhost", database=1)
 
     >>> # Publishing messages
     >>> q = conn.Queue("tasks")
