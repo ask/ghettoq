@@ -37,6 +37,15 @@ class TestRedisBackend(unittest.TestCase):
         q = conn.Queue("testing")
 
         self.assertRaises(Empty, q.get)
+        
+    def test_queue_is_empty_after_purge(self):
+        conn = create_connection(1)
+        q = conn.Queue("test_queue")
+        q.put(serialize({"name": "George Constanza"}))
+        q.put(serialize({"name": "George Constanza"}))
+        q.purge()
+        
+        self.assertRaises(Empty, q.get)
 
     def test_put__get(self):
         conn = create_connection(1)
@@ -53,6 +62,3 @@ class TestRedisBackend(unittest.TestCase):
         for queue in a, b, c:
             self.assertRaises(Empty, queue.get)
         self.assertRaises(Empty, queueset.get)
-        
-if __name__ == '__main__':
-    unittest.main()
