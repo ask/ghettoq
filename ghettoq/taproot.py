@@ -128,7 +128,7 @@ class MultiBackend(BaseBackend):
         payload, queue = self._poll(queueset)
 
         if not queue or queue not in self._callbacks:
-            continue
+            return
 
         self._callbacks[queue](payload)
 

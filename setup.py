@@ -99,6 +99,7 @@ setup(
     author_email=ghettoq.__contact__,
     url=ghettoq.__homepage__,
     platforms=["any"],
+    license='BSD',
     packages=packages,
     data_files=data_files,
     cmdclass = {"test": RunTests},
