@@ -31,6 +31,13 @@ class QueueSet(object):
         self.backend = backend
         self.queue_names = list(queues)
 
+        self._get_many = getattr(self.backend, "get_many", None)
+        self.get = self._emulated
+        if self._get_many:
+            self.get = self._native
+
+        # attributes below are only used in emulation mode.
+
         # queues could be a PriorityQueue as well to support
         # priorities.
         self.queues = map(self.backend.Queue, self.queue_names)
@@ -42,7 +49,10 @@ class QueueSet(object):
         # tried all of them.
         self.all = frozenset(self.queue_names)
 
-    def get(self):
+    def _native(self, timeout=None):
+        return self._get_many(self.queue_names, timeout=timeout)
+
+    def _emulated(self, timeout=None):
         """Get the next message avaiable in the queue.
 
         :returns: The message and the name of the queue it came from as

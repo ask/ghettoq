@@ -78,6 +78,7 @@ class MultiBackend(BaseBackend):
     default_port = None
     type = None
     interval = 1
+    polling = True
     _prefetch_count = None
 
     def __init__(self, connection, **kwargs):
@@ -116,7 +117,7 @@ class MultiBackend(BaseBackend):
                     return resource.get()
                 except QueueEmpty:
                     pass
-            time.sleep(self.interval)
+            self.polling and time.sleep(self.interval)
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
                          **kwargs):
@@ -214,6 +215,7 @@ class MultiBackend(BaseBackend):
 
 class Redis(MultiBackend):
     type = "Redis"
+    polling = False
 
 
 class Database(MultiBackend):
