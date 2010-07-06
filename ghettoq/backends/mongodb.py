@@ -27,11 +27,11 @@ class MongodbBackend(BaseBackend):
         self.client.insert({"payload": message, "queue": queue})
 
     def get(self, queue):
-        msg = self.client.find_one({"queue": queue})
-        if not msg:
+        try:
+            msg = self.client.database.command("findandmodify", "messages", query={"queue": queue}, remove=True)
+        except OperationFailure, e:
             raise Empty("Empty queue")
-        self.client.remove(msg)
-        return msg["payload"]
+        return msg["value"]["payload"]
 
     def purge(self, queue):
         return self.client.remove({"queue": queue})
