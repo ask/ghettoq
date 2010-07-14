@@ -74,7 +74,10 @@ SKIP_EXTENSIONS = [".pyc", ".pyo", ".swp", ".swo"]
 
 
 def is_unwanted_file(filename):
-    return any([filename.endswith(skip_ext) for skip_ext in SKIP_EXTENSIONS])
+    for skip_ext in SKIP_EXTENSIONS:
+        if filename.endswith(skip_ext):
+            return True
+    return False
 
 
 for dirpath, dirnames, filenames in os.walk(src_dir):
