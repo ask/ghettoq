@@ -1,10 +1,14 @@
-from ghettoq.simple import Connection, Empty
-from anyjson import serialize, deserialize
 import unittest
+
+from anyjson import serialize, deserialize
+
+from ghettoq.simple import Connection, Empty
+
 
 def create_connection(database):
     return Connection(database)
-   
+
+
 class TestDatabaseBackend(unittest.TestCase):
 
     def test_basic(self):
@@ -16,20 +20,20 @@ class TestDatabaseBackend(unittest.TestCase):
 
         self.assertEquals(deserialize(q.get()),
                 {"name": "George Constanza"})
-    
+
     def test_empty_raises_Empty(self):
         conn = create_connection("database")
         q = conn.Queue("testing")
 
         self.assertRaises(Empty, q.get)
-        
+
     def test_queue_is_empty_after_purge(self):
         conn = create_connection("database")
         q = conn.Queue("test_queue")
         q.put(serialize({"name": "George Constanza"}))
         q.put(serialize({"name": "George Constanza"}))
         q.purge()
-        
+
         self.assertRaises(Empty, q.get)
 
     def test_put__get(self):
