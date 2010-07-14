@@ -1,4 +1,5 @@
 from pymongo.connection import Connection
+from pymongo.errors import OperationFailure
 
 from ghettoq.backends.base import BaseBackend
 from ghettoq.messaging import Empty
@@ -28,8 +29,9 @@ class MongodbBackend(BaseBackend):
 
     def get(self, queue):
         try:
-            msg = self.client.database.command("findandmodify", "messages", query={"queue": queue}, remove=True)
-        except OperationFailure, e:
+            msg = self.client.database.command("findandmodify",
+                        "messages", query={"queue": queue}, remove=True)
+        except OperationFailure:
             raise Empty("Empty queue")
         return msg["value"]["payload"]
 
