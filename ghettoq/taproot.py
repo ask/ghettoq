@@ -8,6 +8,7 @@ from carrot.utils import gen_unique_id
 import sys
 import time
 import atexit
+import threading
 
 
 class QualityOfService(object):
@@ -72,7 +73,6 @@ class Message(BaseMessage):
         raise NotImplementedError(
             "The GhettoQ backend does not implement basic.reject")
 
-
 class MultiBackend(BaseBackend):
     Message = Message
     default_port = None
@@ -80,14 +80,15 @@ class MultiBackend(BaseBackend):
     interval = 1
     polling = True
     _prefetch_count = None
+    _t = threading.local()
+    _t.consumers = {}
+    _t.callbacks = {}
 
     def __init__(self, connection, **kwargs):
         if not self.type:
             raise NotImplementedError(
                         "MultiBackends must have the type attribute")
         self.connection = connection
-        self._consumers = {}
-        self._callbacks = {}
         self._channel = None
         self._qos_manager = None
 
@@ -121,17 +122,17 @@ class MultiBackend(BaseBackend):
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
                          **kwargs):
-        self._consumers[consumer_tag] = queue
-        self._callbacks[queue] = callback
+        self._t.consumers[consumer_tag] = queue
+        self._t.callbacks[queue] = callback
 
     def drain_events(self, timeout=None):
-        queueset = self.channel.QueueSet(self._consumers.values())
+        queueset = self.channel.QueueSet(self._t.consumers.values())
         payload, queue = self._poll(queueset)
 
-        if not queue or queue not in self._callbacks:
+        if not queue or queue not in self._t.callbacks:
             return
 
-        self._callbacks[queue](payload)
+        self._t.callbacks[queue](payload)
 
     def consume(self, limit=None):
         for total_message_count in count():
@@ -180,11 +181,11 @@ class MultiBackend(BaseBackend):
     def cancel(self, consumer_tag):
         if not self._channel:
             return
-        queue = self._consumers.pop(consumer_tag, None)
-        self._callbacks.pop(queue, None)
+        queue = self._t.consumers.pop(consumer_tag, None)
+        self._t.callbacks.pop(queue, None)
 
     def close(self):
-        for consumer_tag in self._consumers.keys():
+        for consumer_tag in self._t.consumers.keys():
             self.cancel(consumer_tag)
         if self._channel:
             self._channel.close()

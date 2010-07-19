@@ -1,3 +1,5 @@
+from Queue import Empty
+
 from redis import Redis as Redis
 from ghettoq.backends.base import BaseBackend
 
@@ -34,11 +36,15 @@ class RedisBackend(BaseBackend):
         self.client.lpush(queue, message)
 
     def get(self, queue):
+        if not queue:
+            raise Empty
         dest, item = self.client.brpop([queue], timeout=1)
         return item
 
     def get_many(self, queues, timeout=None):
-        dest, item = self.client.brpop(queues, timeout)
+        if not queues:
+            raise Empty
+        dest, item = self.client.brpop(queues, timeout=timeout)
         return item, dest
 
     def purge(self, queue):
