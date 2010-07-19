@@ -2,6 +2,12 @@ t================
  Change history
 ================
 
+0.4.1
+=====
+:release-date: 2010-07-19 11:30 A.M CEST
+
+* Now works with celery again ;)
+
 0.4.0
 =====
 :release-date: 2010-07-14 11:00 A.M CEST
