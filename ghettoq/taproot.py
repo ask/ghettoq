@@ -225,3 +225,8 @@ class Database(MultiBackend):
 
 class MongoDB(MultiBackend):
     type = "mongodb"
+
+
+class Beanstalk(MultiBackend):
+    type = "Beanstalk"
+    polling = False

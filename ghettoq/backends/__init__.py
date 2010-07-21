@@ -4,6 +4,7 @@ BACKEND_ALIASES = {
     "redis": "ghettoq.backends.pyredis.RedisBackend",
     "database": "ghettoq.backends.database.DatabaseBackend",
     "mongodb": "ghettoq.backends.mongodb.MongodbBackend",
+    "beanstalk": "ghettoq.backends.beanstalk.BeanstalkBackend",
 }
 _backend_cache = {}
 
