@@ -8,8 +8,8 @@ class Queue(object):
         self.name = name
         self.backend = backend
 
-    def put(self, payload):
-        self.backend.put(self.name, payload)
+    def put(self, payload, priority=0):
+        self.backend.put(self.name, payload, priority=priority)
 
     def get(self):
         payload = self.backend.get(self.name)
