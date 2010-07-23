@@ -1,6 +1,6 @@
 from Queue import Empty
 
-from redis import Redis as Redis
+from redis import Redis
 from ghettoq.backends.base import BaseBackend
 
 DEFAULT_PORT = 6379
@@ -48,4 +48,7 @@ class RedisBackend(BaseBackend):
         return item, dest
 
     def purge(self, queue):
-        return self.client.delete(queue)
+        size = self.client.llen(queue)
+        self.client.delete(queue)
+        return size
+
