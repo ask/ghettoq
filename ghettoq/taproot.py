@@ -80,9 +80,8 @@ class MultiBackend(BaseBackend):
     interval = 1
     polling = True
     _prefetch_count = None
-    _t = threading.local()
-    _t.consumers = {}
-    _t.callbacks = {}
+    _consumers = {}
+    _callbacks = {}
 
     def __init__(self, connection, **kwargs):
         if not self.type:
@@ -122,17 +121,17 @@ class MultiBackend(BaseBackend):
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
                          **kwargs):
-        self._t.consumers[consumer_tag] = queue
-        self._t.callbacks[queue] = callback
+        self._consumers[consumer_tag] = queue
+        self._callbacks[queue] = callback
 
     def drain_events(self, timeout=None):
-        queueset = self.channel.QueueSet(self._t.consumers.values())
+        queueset = self.channel.QueueSet(self._consumers.values())
         payload, queue = self._poll(queueset)
 
-        if not queue or queue not in self._t.callbacks:
+        if not queue or queue not in self._callbacks:
             return
 
-        self._t.callbacks[queue](payload)
+        self._callbacks[queue](payload)
 
     def consume(self, limit=None):
         for total_message_count in count():
@@ -181,11 +180,11 @@ class MultiBackend(BaseBackend):
     def cancel(self, consumer_tag):
         if not self._channel:
             return
-        queue = self._t.consumers.pop(consumer_tag, None)
-        self._t.callbacks.pop(queue, None)
+        queue = self._consumers.pop(consumer_tag, None)
+        self._callbacks.pop(queue, None)
 
     def close(self):
-        for consumer_tag in self._t.consumers.keys():
+        for consumer_tag in self._consumers.keys():
             self.cancel(consumer_tag)
         if self._channel:
             self._channel.close()
