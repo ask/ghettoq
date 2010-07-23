@@ -7,8 +7,8 @@ ghettoq - Ghetto Queue using Redis or Django Models.
 Introduction
 ============
 
-ghettoq is a ghetto queue framework, used to implement Redis and Django
-database support for
+ghettoq is a ghetto queue framework, used to implement Redis, MongoDB, 
+Beanstalk and Django database support for
 `carrot`_
 
 .. _`carrot`: http://pypi.python.org/pypi/carrot
@@ -86,6 +86,25 @@ connection options. The settings attrs used are:
     >>> from ghettoq.simple import Connection
 
     >>> conn = Connection("mongodb")
+    >>> queue = conn.Queue(name="tasks")
+    >>> queue.put("To whom it may concern")
+    >>> queue.get()
+    "To whom it may concern"
+
+Using Beanstalk support
+-----------------------------
+
+Requires the beanstalkc python library. If settings is already configured you 
+don't have to specify any connection options. The settings attrs used are:
+
+* BROKER_HOST: 'localhost' if not set
+* BROKER_PORT: 11300 if not set
+* BROKER_VHOST: 'ghettoq' if not set
+* Collection name: "messages"... should be added support for BROKER_COL settings var?
+
+    >>> from ghettoq.simple import Connection
+
+    >>> conn = Connection("beanstalk")
     >>> queue = conn.Queue(name="tasks")
     >>> queue.put("To whom it may concern")
     >>> queue.get()
