@@ -52,7 +52,7 @@ class BeanstalkBackend(BaseBackend):
         
         # timeout of None will cause beanstalk to timeout waiting for a new request
         if timeout is None:
-            timeout = 0
+            timeout = 1
             
         to_watch = ifilter(lambda q: q not in self.client.watching(), queues)
         map(self.client.watch, to_watch)
