@@ -29,9 +29,9 @@ class BeanstalkBackend(BaseBackend):
         self.port = self.port or DEFAULT_PORT
         return Connection(host=self.host, port=self.port)
 
-    def put(self, queue, message):
+    def put(self, queue, message, priority=0):
         self.client.use(queue)
-        self.client.put(message)
+        self.client.put(message, priority=priority)
 
     def get(self, queue):
         if not queue:

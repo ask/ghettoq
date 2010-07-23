@@ -176,7 +176,7 @@ class MultiBackend(BaseBackend):
 
     def publish(self, message, exchange, routing_key, **kwargs):
         message["destination"] = exchange
-        self.channel.Queue(exchange).put(serialize(message))
+        self.channel.Queue(exchange).put(serialize(message), priority=message['priority'])
 
     def cancel(self, consumer_tag):
         if not self._channel:
