@@ -24,7 +24,7 @@ class MongodbBackend(BaseBackend):
         col.ensure_index([("queue", 1)])
         return col
 
-    def put(self, queue, message, priority = 0):
+    def put(self, queue, message, **kwargs):
         self.client.insert({"payload": message, "queue": queue})
 
     def get(self, queue):

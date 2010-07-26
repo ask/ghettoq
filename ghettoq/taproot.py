@@ -1,14 +1,16 @@
-from carrot.backends.base import BaseBackend, BaseMessage
-from anyjson import serialize, deserialize
-from ghettoq.backends import Connection
-from itertools import count
-from ghettoq.messaging import Empty as QueueEmpty
-from django.utils.datastructures import SortedDict
-from carrot.utils import gen_unique_id
+import atexit
 import sys
 import time
-import atexit
-import threading
+
+from itertools import count
+from django.utils.datastructures import SortedDict
+
+from anyjson import serialize, deserialize
+from carrot.backends.base import BaseBackend, BaseMessage
+from carrot.utils import gen_unique_id
+
+from ghettoq.backends import Connection
+from ghettoq.messaging import Empty as QueueEmpty
 
 
 class QualityOfService(object):
@@ -72,6 +74,7 @@ class Message(BaseMessage):
     def reject(self):
         raise NotImplementedError(
             "The GhettoQ backend does not implement basic.reject")
+
 
 class MultiBackend(BaseBackend):
     Message = Message
@@ -175,7 +178,8 @@ class MultiBackend(BaseBackend):
 
     def publish(self, message, exchange, routing_key, **kwargs):
         message["destination"] = exchange
-        self.channel.Queue(exchange).put(serialize(message), priority=message['priority'])
+        self.channel.Queue(exchange).put(serialize(message),
+                                         priority=message["priority"])
 
     def cancel(self, consumer_tag):
         if not self._channel:

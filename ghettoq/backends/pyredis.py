@@ -32,33 +32,32 @@ class RedisBackend(BaseBackend):
         return Redis(host=self.host, port=self.port, db=self.database,
                      password=self.password)
 
-    def put(self, queue, message, priority = 0):
+    def put(self, queue, message, **kwargs):
         self.client.lpush(queue, message)
 
     def get(self, queue):
         if not queue:
             raise Empty
-        
+
         try:
             dest, item = self.client.brpop([queue], timeout=1)
         except TypeError:
             raise Empty
-        
+
         return item
 
     def get_many(self, queues, timeout=None):
         if not queues:
             raise Empty
-        
+
         try:
             item, dest = self.client.brpop(queues, timeout=1)
         except TypeError:
             raise Empty
-        
+
         return item
 
     def purge(self, queue):
         size = self.client.llen(queue)
         self.client.delete(queue)
         return size
-

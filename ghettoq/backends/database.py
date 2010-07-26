@@ -18,7 +18,7 @@ class DatabaseBackend(BaseBackend):
     def establish_connection(self):
         pass
 
-    def put(self, queue, message, priority = 0):
+    def put(self, queue, message, **kwargs):
         Queue.objects.publish(queue, message)
 
     def get(self, queue):
