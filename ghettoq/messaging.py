@@ -66,7 +66,10 @@ class QueueSet(object):
 
         while True:
             # Get the next queue in the cycle, and try to get an item off it.
-            queue = self.cycle.next()
+            try:
+                queue = self.cycle.next()
+            except StopIteration:
+                raise Empty("No queues registered")
             try:
                 item = queue.get()
             except Empty:

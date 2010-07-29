@@ -1,9 +1,10 @@
 import atexit
+import socket
 import sys
-import time
 
 from itertools import count
 from django.utils.datastructures import SortedDict
+from time import time, sleep
 
 from anyjson import serialize, deserialize
 from carrot.backends.base import BaseBackend, BaseMessage
@@ -113,14 +114,21 @@ class MultiBackend(BaseBackend):
     def queue_purge(self, queue, **kwargs):
         return self.channel.Queue(queue).purge()
 
-    def _poll(self, resource):
+    def _poll(self, resource, timeout=None):
+        time_elapsed = 0.0
         while True:
+            time_start = time()
             if self.qos_manager.can_consume():
                 try:
                     return resource.get()
                 except QueueEmpty:
                     pass
-            self.polling and time.sleep(self.interval)
+            time_elapsed += (time() - time_start)
+            if timeout and time_elapsed >= timeout:
+                raise socket.timeout("Operation timed out.")
+            if self.polling:
+                sleep(self.interval)
+                time_elapsed += self.interval
 
     def declare_consumer(self, queue, no_ack, callback, consumer_tag,
                          **kwargs):
@@ -129,7 +137,7 @@ class MultiBackend(BaseBackend):
 
     def drain_events(self, timeout=None):
         queueset = self.channel.QueueSet(self._consumers.values())
-        payload, queue = self._poll(queueset)
+        payload, queue = self._poll(queueset, timeout=timeout)
 
         if not queue or queue not in self._callbacks:
             return
