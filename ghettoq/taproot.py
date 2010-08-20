@@ -16,7 +16,9 @@ from ghettoq.messaging import Empty as QueueEmpty
 
 class QualityOfService(object):
 
-    def __init__(self, resource, prefetch_count=None, interval=None):
+    def __init__(self, backend, resource, prefetch_count=None,
+            interval=None):
+        self.backend = backend
         self.resource = resource
         self.prefetch_count = prefetch_count
         self.interval = interval
@@ -34,8 +36,12 @@ class QualityOfService(object):
         self._delivered.pop(delivery_tag, None)
 
     def restore_unacked(self):
-        for message, queue_name in self._delivered.items():
-            self.resource.put(queue_name, message)
+        for delivery_tag, delivered in self._delivered.items():
+            message, queue_name = delivered
+            send = self.backend.prepare_message(message.body, 2, 10,
+                                                message.content_type,
+                                                message.content_encoding)
+            self.resource.put(queue_name, serialize(send))
         self._delivered = SortedDict()
 
     def requeue(self, delivery_tag):
@@ -216,7 +222,7 @@ class MultiBackend(BaseBackend):
     @property
     def qos_manager(self):
         if self._qos_manager is None:
-            self._qos_manager = QualityOfService(self.channel)
+            self._qos_manager = QualityOfService(self, self.channel)
 
         # Update prefetch count / interval
         self._qos_manager.prefetch_count = self._prefetch_count
