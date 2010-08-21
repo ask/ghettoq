@@ -41,6 +41,7 @@ class QualityOfService(object):
             send = self.backend.prepare_message(message.body, 2, 10,
                                                 message.content_type,
                                                 message.content_encoding)
+            send["destination"] = queue_name
             self.resource.put(queue_name, serialize(send))
         self._delivered = SortedDict()
 
