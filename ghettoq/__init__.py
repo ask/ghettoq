@@ -1,5 +1,5 @@
 """Ghetto Queue using Redis or Django Models."""
-VERSION = (0, 4, 3)
+VERSION = (0, 4, 4)
 __version__ = ".".join(map(str, VERSION))
 __author__ = "Ask Solem"
 __contact__ = "askh@opera.com"
