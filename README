@@ -2,7 +2,7 @@
 ghettoq - Ghetto Queue using Redis or Django Models.
 ============================================================================
 
-:version: 0.4.2
+:version: 0.4.3
 
 Introduction
 ============
