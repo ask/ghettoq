@@ -51,11 +51,11 @@ class RedisBackend(BaseBackend):
             raise Empty
 
         try:
-            item, dest = self.client.brpop(queues, timeout=1)
+            dest, item = self.client.brpop(queues, timeout=1)
         except TypeError:
             raise Empty
 
-        return item
+        return item, dest
 
     def purge(self, queue):
         size = self.client.llen(queue)
