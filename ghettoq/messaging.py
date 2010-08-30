@@ -18,7 +18,7 @@ class Queue(object):
         raise Empty
 
     def purge(self):
-        self.backend.purge(self.name)
+        return self.backend.purge(self.name)
 
     def __repr__(self):
         return "<Queue: %s>" % repr(self.name)

@@ -62,4 +62,16 @@ class BeanstalkBackend(BaseBackend):
         return self._parse_job(job)
 
     def purge(self, queue):
-        raise NotImplementedError
+        if queue not in self.client.watching(): 
+            self.client.watch(queue) 
+            ignore = ifilter(lambda q: q!= queue, self.client.watching()) 
+            map(self.client.ignore, ignore) 
+            count = 0 
+            while True: 
+                job = self.client.reserve(timeout=1) 
+                if job: 
+                    job.delete() 
+                    count += 1
+                else: 
+                    break 
+            return count 
