@@ -3,6 +3,8 @@ from Queue import Empty
 import couchdb
 from ghettoq.backends.base import BaseBackend
 
+__author__ = "David Clymer <david@zettazebra.com>"
+
 try:
     import uuid
     NO_UUID = False
