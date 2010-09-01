@@ -31,7 +31,7 @@ DATABASE_PASSWORD = ''
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.' % DATABASE_ENGINE,
+        'ENGINE': 'django.db.backends.%s' % DATABASE_ENGINE,
         'NAME': DATABASE_NAME,
         'USER': '',
         'PASSWORD': '',
