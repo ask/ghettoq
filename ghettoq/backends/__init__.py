@@ -11,7 +11,7 @@ _backend_cache = {}
 
 def resolve_backend(backend):
     backend = BACKEND_ALIASES.get(backend.lower(), backend)
-    backend_module_name, _, backend_cls_name = backend.rpartition(".")
+    backend_module_name, backend_cls_name = backend.rsplit('.', 1)
     return backend_module_name, backend_cls_name
 
 
