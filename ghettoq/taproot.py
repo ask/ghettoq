@@ -251,4 +251,4 @@ class Beanstalk(MultiBackend):
 
 
 class CouchDB(MultiBackend):
-    type = "couch_db"
+    type = "couchdb"
