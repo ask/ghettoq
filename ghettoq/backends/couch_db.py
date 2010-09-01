@@ -74,4 +74,6 @@ class CouchdbBackend(BaseBackend):
         return item['payload']
 
     def purge(self, queue):
-        return self.client.delete(self.client.get(queue))
+        doc = self.client.get(queue)
+        if doc:
+            return self.client.delete(doc)
