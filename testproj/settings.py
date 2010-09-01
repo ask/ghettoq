@@ -23,11 +23,16 @@ TEST_APPS = (
 
 MANAGERS = ADMINS
 
+DATABASE_ENGINE = 'sqlite3'
+DATABASE_NAME = 'testdb.sqlite'
+DATABASE_USER = ''
+DATABASE_PASSWORD = ''
+
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'testdb.sqlite',
+        'ENGINE': 'django.db.backends.' % DATABASE_ENGINE,
+        'NAME': DATABASE_NAME,
         'USER': '',
         'PASSWORD': '',
         'HOST': '',
