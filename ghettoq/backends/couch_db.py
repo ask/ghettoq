@@ -40,7 +40,6 @@ class CouchdbBackend(BaseBackend):
                                              timeout)
 
     def establish_connection(self):
-        self.port = self.port or DEFAULT_PORT
         if self.ssl:
             proto = 'https'
         else:
