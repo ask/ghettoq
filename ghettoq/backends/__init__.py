@@ -5,6 +5,7 @@ BACKEND_ALIASES = {
     "database": "ghettoq.backends.database.DatabaseBackend",
     "mongodb": "ghettoq.backends.mongodb.MongodbBackend",
     "beanstalk": "ghettoq.backends.beanstalk.BeanstalkBackend",
+    "couch_db": "ghettoq.backends.couch_db.CouchdbBackend",
 }
 _backend_cache = {}
 

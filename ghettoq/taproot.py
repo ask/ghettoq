@@ -248,3 +248,7 @@ class MongoDB(MultiBackend):
 class Beanstalk(MultiBackend):
     type = "Beanstalk"
     polling = False
+
+
+class CouchDB(MultiBackend):
+    type = "couch_db"
