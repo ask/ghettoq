@@ -1,15 +1,10 @@
 from Queue import Empty
 
 import couchdb
+import uuid
 from ghettoq.backends.base import BaseBackend
 
 __author__ = "David Clymer <david@zettazebra.com>"
-
-try:
-    import uuid
-    NO_UUID = False
-except ImportError:
-    NO_UUID = True
 
 DEFAULT_HOST = '127.0.0.1'
 DEFAULT_PORT = 5984
@@ -54,10 +49,7 @@ class CouchdbBackend(BaseBackend):
             return server[self.database]
 
     def put(self, queue, message, **kwargs):
-        if NO_UUID:
-            self.client.save({'queue': queue, 'payload': message})
-        else:
-            self.client.save({'_id': uuid.uuid4().hex, 'queue': queue, 'payload': message})
+        self.client.save({'_id': uuid.uuid4().hex, 'queue': queue, 'payload': message})
 
     def get(self, queue):
         # If the message view is not yet set up, we'll need it now.

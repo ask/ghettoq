@@ -22,6 +22,10 @@ if root_dir != '':
     os.chdir(root_dir)
 src_dir = "ghettoq"
 
+install_requires = []
+# Required for couchdb backend
+if sys.version_info < (2, 5):
+    install_requires.append("uuid")
 
 def osx_install_data(install_data):
 
@@ -108,8 +112,7 @@ setup(
     cmdclass = {"test": RunTests},
     zip_safe=False,
     test_suite="nose.collector",
-    install_requires=[
-    ],
+    install_requires=install_requires,
     classifiers=[
         "Development Status :: 4 - Beta",
         "Operating System :: OS Independent",
