@@ -51,22 +51,27 @@ class CouchdbBackend(BaseBackend):
     def put(self, queue, message, **kwargs):
         self.client.save({'_id': uuid.uuid4().hex, 'queue': queue, 'payload': message})
 
-    def get(self, queue):
+    def _get(self, queue, **kwargs):
         # If the message view is not yet set up, we'll need it now.
         if not self.view_created:
             create_message_view(self.client)
-            self.view_created
+            self.view_created = True
 
         if not queue:
             raise Empty
-        result = self.client.view('ghettoq/messages', key=queue, limit=1)
+        return self.client.view('ghettoq/messages', key=queue, **kwargs)
+
+    def get(self, queue):
+        result = self._get(queue, limit=1)
         if not result:
             raise Empty
+
         item = result.rows[0].value
         self.client.delete(item)
         return item['payload']
 
     def purge(self, queue):
-        doc = self.client.get(queue)
-        if doc:
-            return self.client.delete(doc)
+        result = self._get(queue)
+        for item in result:
+            self.client.delete(item.value)
+        return len(result)
