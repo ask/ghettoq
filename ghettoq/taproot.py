@@ -3,7 +3,6 @@ import socket
 import sys
 
 from itertools import count
-from django.utils.datastructures import SortedDict
 from time import time, sleep
 
 from anyjson import serialize, deserialize
@@ -12,6 +11,15 @@ from carrot.utils import gen_unique_id
 
 from ghettoq.backends import Connection
 from ghettoq.messaging import Empty as QueueEmpty
+
+
+try:
+    from collections import OrderedDict as SortedDict
+except ImportError:
+    try:
+        from django.utils.datastructures import SortedDict
+    except ImportError:
+        from odict import odict as SortedDict
 
 
 class QualityOfService(object):
