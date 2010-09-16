@@ -14,12 +14,9 @@ from ghettoq.messaging import Empty as QueueEmpty
 
 
 try:
-    from collections import OrderedDict as SortedDict
+    from collections import OrderedDict
 except ImportError:
-    try:
-        from django.utils.datastructures import SortedDict
-    except ImportError:
-        from odict import odict as SortedDict
+    from odict import odict as OrderedDict
 
 
 class QualityOfService(object):
@@ -30,7 +27,7 @@ class QualityOfService(object):
         self.resource = resource
         self.prefetch_count = prefetch_count
         self.interval = interval
-        self._delivered = SortedDict()
+        self._delivered = OrderedDict()
         self._restored_once = False
         atexit.register(self.restore_unacked_once)
 
@@ -51,7 +48,7 @@ class QualityOfService(object):
                                                 message.content_encoding)
             send["destination"] = queue_name
             self.resource.put(queue_name, serialize(send))
-        self._delivered = SortedDict()
+        self._delivered = OrderedDict()
 
     def requeue(self, delivery_tag):
         try:

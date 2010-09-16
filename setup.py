@@ -27,14 +27,10 @@ install_requires = []
 if sys.version_info < (2, 5):
     install_requires.append("uuid")
 
-# We rely on a sorted dictionary implementation and use either python's
-# build-in OrderedDict, Django's SortedDict or odict.
-
+# We rely on a sorted dictionary implementation and use either Python's
+# built-in OrderedDict or the odict module.
 if sys.version_info < (2, 7):
-    try:
-        import django
-    except ImportError:
-        install_requires.append("odict")
+    install_requires.append("odict")
 
 
 def osx_install_data(install_data):
