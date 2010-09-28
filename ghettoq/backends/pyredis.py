@@ -28,7 +28,7 @@ class RedisBackend(BaseBackend):
                                            database, timeout)
 
     def establish_connection(self):
-        self.port = self.port or DEFAULT_PORT
+        self.port = int(self.port) or DEFAULT_PORT
         return Redis(host=self.host, port=self.port, db=self.database,
                      password=self.password)
 
