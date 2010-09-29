@@ -2,11 +2,64 @@ t================
  Change history
 ================
 
+0.4.5
+=====
+
+* CouchDB backend added.
+
+* Redis: Automatically cast port argument to int.
+
+* Beanstalk: Now properly implements ``queue.purge``.
+
+* Django dependency removed.
+
+    :class:`collections.OrderedDict` is used instead of
+    `django.utils.datastructures.SortedDict` when running on Python 2.7.
+    If running on an older Python version, the :mod:`odict` package is added
+    as a dependency.
+
+* Now depends on the :mod:`uuid` module.
+
+    The :mod:`uuid` module was added to Python 2.5. If running on older
+    versions the compat package is added as a dependency.
+
+0.4.4
+=====
+
+* Redis: Fied ``too many values to unpack`` errors.
+
+    See http://github.com/ask/ghettoq/issues/#issue/6
+
+0.4.3
+=====
+
+* Now sets the destination queue when restoring unacked messages.
+
+    See http://github.com/ask/ghettoq/issues/#issue/7
+
+* Regression broke restoring of unacked messages.
+
+* ``connection.drain_events`` now supports the ``timeout`` argument.
+
+0.4.2
+=====
+
+* Beanstalk backend added.
+
+* Remove _consumers + _callbacks from thread local storage
+
+    See http://github.com/ask/ghettoq/issues/#issue/5
+
+* Redis: purge now returns number of messages deleted.
+
+* Beanstalk: Added support for queue priorities and increased default receive
+  timeout to 1.
+
 0.4.1
 =====
 :release-date: 2010-07-19 11:30 A.M CEST
 
-* Now works with celery again ;)
+* Fixed ``invalid number of arguments for brpop command`` bug.
 
 0.4.0
 =====
@@ -21,7 +74,7 @@ t================
     redis client is required to use the Redis backend.
 
 * Redis: The specified database name must now be an integer.
-    
+
     The following values are considered OK and are accepted:
 
     =====================================  =====================================
