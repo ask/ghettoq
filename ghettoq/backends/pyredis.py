@@ -28,7 +28,7 @@ class RedisBackend(BaseBackend):
                                            database, timeout)
 
     def establish_connection(self):
-        self.port = int(self.port) or DEFAULT_PORT
+        self.port = int(self.port or DEFAULT_PORT)
         return Redis(host=self.host, port=self.port, db=self.database,
                      password=self.password)
 
@@ -61,3 +61,14 @@ class RedisBackend(BaseBackend):
         size = self.client.llen(queue)
         self.client.delete(queue)
         return size
+
+    def close(self):
+        if self.connection is not None:
+            try:
+                self.connection.bgsave()
+            except ResponseError:
+                pass
+            try:
+                self.connection.connection.disconnect()
+            except (AttributeError, ResponseError):
+                pass
